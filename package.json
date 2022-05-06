@@ -1,0 +1,8 @@
+{
+  "name": "aptillians",
+  "version": "1.0.0",
+  "description": "rawr",
+  "main": "index.js",
+  "repository": "git@github.com:qwertey6/aptillians.git",
+  "license": "MIT"
+}
