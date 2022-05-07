@@ -1,11 +1,12 @@
+import { HexString } from 'aptos';
 
-export type AccountAddress = Uint8Array;
+export type AccountAddress = HexString;
 
-export type AptillianId = string;
+export type AptillianId = number;
 
-export enum ElementEnum{
-    Grass="Grass",
-    Water="Water",
-    Fire="Fire",
-    Physical="Physical",
+export enum ElementEnum {
+  Grass = 'Grass',
+  Water = 'Water',
+  Fire = 'Fire',
+  Physical = 'Physical',
 }
