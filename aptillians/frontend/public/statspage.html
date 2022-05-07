@@ -1,0 +1,147 @@
+<html>
+ <head>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+
+    <style>
+    .row {
+        display: flex;     
+    }
+
+    .score-row {
+        display: flex; 
+        justify-content: space-evenly;
+
+    }
+
+    .column {
+        flex-grow: 1;
+    }
+    .score-column {
+        width: 25%;
+    }
+
+    h2 {
+        text-align: center;
+        font-family: sans-serif
+    }
+    p {
+        text-align: center;
+        font-family: sans-serif
+    }
+    
+    .container {
+        margin-top: 20px;
+    }
+    .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+    }
+
+    
+    </style>
+ </head>
+ <body> 
+    <div id="pendingChallengesModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Challenges</h3>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col">
+                                <h3>Health</h3>
+                            </div>
+                            <div class="col">
+                                <h3>Attack</h3>
+                            </div>
+                            <div class="col">
+                                <h3>Defense</h3>
+                            </div>
+                            <div class="col">
+                                <h3>Speed</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <img src="img/squirtle.jpeg" style="width:200px; height:200px" class="center">
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn btn-primary center">Accept</button>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-secondary center">Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <h2>Stats</h2>
+        <div class="row">
+            <div class="column" style="background-color:#FFB695;">
+                <h2>Health</h2>
+                <p>Data..</p>
+            </div>
+            <div class="column" style="background-color:#96D1CD;">
+                <h2>Attack</h2>
+                <p> Data..</p>
+            </div>
+            <div class="column" style="background-color:#74C3E1;">
+                <h2>Defense</h2>
+                <p>   Data..</p>
+            </div>
+            <div class="column" style="background-color:#F6CF57;">
+                <h2>Speed</h2>
+                <p>   Data..</p>
+            </div>
+        </div>
+    </div>    
+    <div class="container">
+        <div class="score-row">
+            <div class="score-column" style="background-color:#FFB695;">
+                
+                <h2>wins</h2>
+                <p>2</p>
+            </div>
+            <div class="score-column" style="background-color:#FFB695;">
+                <h2>losses</h2>
+                <p>3</p>
+            </div>
+        </div>
+    </div>
+    <div class="aptillian">
+        <img src="./img/squirtle.jpeg"
+        style="width:300px;height:200px;"
+        class="center"
+        >
+
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <button type="button" data-toggle="modal" data-target="#pendingChallengesModal">Pending Challenges</button> 
+        </div>
+        <div class="column">
+            <button type="button">Send Challenge</button> 
+        </div>
+
+    </div>
+
+
+    </div>
+
+    <!-- build.js js/main.js -->
+    <script src="js/jquery.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- endbuild -->
+ </body>
+</html>
