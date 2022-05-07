@@ -1,8 +1,8 @@
 module FightClub::Main {
-    use Std::Signer;
-	use Std::Vector;
+    //use Std::Signer;
+	//use Std::Vector;
 	use Std::ASCII;
-	use FightClub::Types;
+	//use FightClub::Types;
   
 	public (script) fun generate_aptillian(owner: &signer, name: ASCII::String, type: u64) acquires AptillianStorage {
         FightClub::Aptillian::generate_aptillian(owner, name, type);

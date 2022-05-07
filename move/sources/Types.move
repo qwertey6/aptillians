@@ -34,18 +34,19 @@ module FightClub::Types {
 		let games_played = 0;
 		let remaining = 10;
 		let idx = 0;
-		let stats = Vector<u64>[0,0,0];
-		let stat = Vector::borrow_mut(&stats, idx);
-		
-		loop {
+		let stats = (vector[0u8, 0u8, 0u8]: vector<u8>);
 
-			if (remaining == 1) *stat = *stat + 1;
-			else if (remaining == 0) break;
-			else *stats = 1 + *stats + (random(idx) % 2);
-			idx = (idx + 1) % 3;
-			stat = Vector::borrow_mut(&stats, idx);
+		// let stat = Vector::borrow_mut(&stats, idx);
+		
+		// loop {
+
+		// 	if (remaining == 1) *stat = *stat + 1;
+		// 	else if (remaining == 0) break;
+		// 	else *stats = 1 + *stats + (random(idx) % 2);
+		// 	idx = (idx + 1) % 3;
+		// 	stat = Vector::borrow_mut(&stats, idx);
 			
-		};
+		// };
 		let attack = Vector::borrow(&stats, 0);
 		let defense = Vector::borrow(&stats, 1);
 		let speed = Vector::borrow(&stats, 2);
@@ -63,10 +64,10 @@ module FightClub::Types {
 				attack,
 				defense,
 				speed,
-				games_played
+				games_played,
 				versus,
 				fights,
-				challenges,
+				challenges
 			}
 	}
 
@@ -81,7 +82,7 @@ module FightClub::Types {
     
 	struct Fight has store, drop {
 		challenger: AptillianIdentifier,
-		target: AptillianIdentifier,
+		target: AptillianIdentifier
 	}
 
 	public fun make_fight(challenger: AptillianIdentifier, target: AptillianIdentifier): Fight{

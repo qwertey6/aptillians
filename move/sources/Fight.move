@@ -1,8 +1,8 @@
-module FightClub::Challenge {
-    use Std::Signer;
-	use Std::Vector;
-	use Std::ASCII;
-	use FightClub::Types;
+module FightClub::Fight {
+    // use Std::Signer;
+	// use Std::Vector;
+	// use Std::ASCII;
+	// use FightClub::Types;
 
 	const ENO_APTILLIAN: u64 = 0;
 	const ENO_CHALLENGE: u64 = 1;
