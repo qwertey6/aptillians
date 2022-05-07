@@ -30,11 +30,12 @@ export class AptillianService {
   async getAptillians(address: AccountAddress): Promise<Array<AptillianDto>> {
     let resources = await this.aptosService.client.getAccountResources(address);
     let accountResource = resources.find(
-      //TO DO: pull from module
-      (r) => r.type === '0xADDRESS::MODULE::RESOURCE',
+      (r) =>
+        r.type ===
+        `${this.aptosService.programAddress}::Aptillian::AptillianStorage`,
     );
 
-    //TO DO convert repsonse to AptillianDto array
+    //TO DO convert repsonse to AptillianDto array; need to see output first
     console.log(accountResource.data);
     throw new Error('TODO!!');
   }
