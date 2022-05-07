@@ -1,0 +1,32 @@
+html, body {
+    height: 100%;
+}
+.viewport {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 563px;
+    background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e96f5306-e905-44dd-9f4f-1151d02d7d09/d2wekos-12f89cf0-ce3e-419f-b356-e38924d98b2f.png/v1/fill/w_900,h_563,q_80,strp/pokemon_r_s_e_ending_wallpaper_by_majoreliteking_d2wekos-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTYzIiwicGF0aCI6IlwvZlwvZTk2ZjUzMDYtZTkwNS00NGRkLTlmNGYtMTE1MWQwMmQ3ZDA5XC9kMndla29zLTEyZjg5Y2YwLWNlM2UtNDE5Zi1iMzU2LWUzODkyNGQ5OGIyZi5wbmciLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.RXgjHcPUXUZeHQqZHfkDf0yozuIj4QnZDFlRgKVjPCk);
+    border-bottom: calc(100vh - 563px) solid #7fac71;
+}
+.backdrop {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: black;
+    opacity: 50%;
+}
+.logo-search-bar {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+.logo-search-bar h1 {
+    text-transform: uppercase;
+    font-size: 6em;
+    color: white;
+}
+.logo-search-bar input {
+    font-family: Arial, Helvetica, sans-serif;
+}

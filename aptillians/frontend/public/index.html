@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>dapp-example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aptillian Homepage</title>
+    <link rel="stylesheet" href="https://meyerweb.com/eric/tools/css/reset/reset.css">
+    <link rel="stylesheet" href="css/index.css">
   </head>
   <body>
+    <!-- Stack: viewport, then backdrop, then logo-search-bar. -->
+    <div class="backdrop"></div>
+    <div class="viewport">
+        <div class="logo-search-bar">
+            <h1>Aptillian</h1>
+            <input placeholder="Enter address here">
+            <button>GO!</button>
+        </div>
+    </div>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>
