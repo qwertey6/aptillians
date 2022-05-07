@@ -13,7 +13,6 @@ export class AptillianIdentifierDto {
 }
 
 export class FightDto {
-  
   // The ID of player 1s Aptillian
   player1: AptillianIdentifierDto;
 
@@ -33,7 +32,7 @@ export class AptillianDto {
   /**
     The ID of this Aptillian
   */
-  id: string;
+  id: number;
 
   /**
     My health at the start of a fight. If it reaches zero, I lose the fight! May increase on wins, decrease on losses
@@ -44,7 +43,7 @@ export class AptillianDto {
     My attack. Used to determine damage to others in fights. May increase on wins, decrease on losses
   */
   attack: number;
-  
+
   /**
     My defence. Used to determine damage to self in fights. May increase on wins, decrease on losses
   */
