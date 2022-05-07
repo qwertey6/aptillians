@@ -16,13 +16,12 @@
         cursor: pointer;
     }
 
-    
     .row {
-        display: flex;     
+        display: flex;
     }
 
     .score-row {
-        display: flex; 
+        display: flex;
         justify-content: space-evenly;
         text-align: center;
 
@@ -30,7 +29,6 @@
 
     .column {
         flex-grow: 1;
-        
     }
     .score-column {
         width: 25%;
@@ -45,7 +43,7 @@
         text-align: center;
         font-family: sans-serif
     }
-    
+
     .container {
         margin-top: 20px;
     }
@@ -58,10 +56,10 @@
     </style>
     <script>const exports = {};</script>
     <script src="js/aptos.js"></script>
-    <script src="js/statspage.js"></script>
+    <script src="js/info.js"></script>
 
  </head>
- <body> 
+ <body>
     <div id="pendingChallengesModal" class="modal fade" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -120,7 +118,7 @@
                             <input placeholder="Enter opponent address">
                             <input placeholder="Aptillian ID">
                             <button type="submit">GO!</button>
-                        </form> 
+                        </form>
                      </div>
                 </div>
             </div>
@@ -148,11 +146,10 @@
                 <p>50</p>
             </div>
         </div>
-    </div>    
+    </div>
     <div class="container">
         <div class="score-row">
             <div class="score-column" style="background-color:#FFB695;">
-                
                 <h2>wins</h2>
                 <p>2</p>
             </div>
@@ -172,10 +169,10 @@
 
     <div class="score-row">
         <div class="score-column">
-            <button class="button" data-toggle="modal" data-target="#pendingChallengesModal">Challenges</button> 
+            <button class="button" data-toggle="modal" data-target="#pendingChallengesModal">Challenges</button>
         </div>
         <div class="score-column">
-            <button class="button" data-toggle="modal" data-target="#sendChallengesModal">Send Challenge</button> 
+            <button class="button" data-toggle="modal" data-target="#sendChallengesModal">Send Challenge</button>
         </div>
 
     </div>
