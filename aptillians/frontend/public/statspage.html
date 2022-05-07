@@ -3,6 +3,20 @@
     <link rel="stylesheet" href="css/bootstrap.min.css" />
 
     <style>
+    .button {
+        border: none;
+        color: green;
+        padding: 16px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+    }
+
+    
     .row {
         display: flex;     
     }
@@ -10,14 +24,17 @@
     .score-row {
         display: flex; 
         justify-content: space-evenly;
+        text-align: center;
 
     }
 
     .column {
         flex-grow: 1;
+        
     }
     .score-column {
         width: 25%;
+        text-align: center;
     }
 
     h2 {
@@ -38,11 +55,11 @@
         margin-right: auto;
         width: 50%;
     }
-
-    
     </style>
     <script>const exports = {};</script>
     <script src="js/aptos.js"></script>
+    <script src="js/statspage.js"></script>
+
  </head>
  <body> 
     <div id="pendingChallengesModal" class="modal fade" role="dialog">
@@ -50,30 +67,34 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">Challenges</h3>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button class="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col">
                                 <h3>Health</h3>
+                                <p>100/100</p>
                             </div>
                             <div class="col">
                                 <h3>Attack</h3>
+                                <p>50</p>
                             </div>
                             <div class="col">
                                 <h3>Defense</h3>
+                                <p> 50</p>
                             </div>
                             <div class="col">
                                 <h3>Speed</h3>
+                                <p>50</p>
                             </div>
                         </div>
                         <div class="row">
-                            <img src="img/squirtle.jpeg" style="width:200px; height:200px" class="center">
+                            <img src="img/togepi2.png" style="width:200px; height:200px" class="center">
                         </div>
                         <div class="row">
                             <div class="col">
-                                <button type="button" class="btn btn-primary center">Accept</button>
+                                    <button type="button" class="btn btn-primary center" id="send-button">Accept</button>
                             </div>
                             <div class="col">
                                 <button type="button" class="btn btn-secondary center">Reject</button>
@@ -85,24 +106,46 @@
         </div>
     </div>
 
+
+    <div id="sendChallengesModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Send Challenge</h3>
+                    <button class="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form id="form">
+                            <input placeholder="Enter opponent address">
+                            <input placeholder="Aptillian ID">
+                            <button type="submit">GO!</button>
+                        </form> 
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="stats">
         <h2>Stats</h2>
         <div class="row">
-            <div class="column" style="background-color:#FFB695;">
+            <div class="column" style="background-color:#FFB695;" id="health">
                 <h2>Health</h2>
-                <p>Data..</p>
+                <p>100/100</p>
             </div>
             <div class="column" style="background-color:#96D1CD;">
                 <h2>Attack</h2>
-                <p> Data..</p>
+                <p>50</p>
             </div>
             <div class="column" style="background-color:#74C3E1;">
                 <h2>Defense</h2>
-                <p>   Data..</p>
+                <p>50</p>
             </div>
             <div class="column" style="background-color:#F6CF57;">
                 <h2>Speed</h2>
-                <p>   Data..</p>
+                <p>50</p>
             </div>
         </div>
     </div>    
@@ -120,19 +163,19 @@
         </div>
     </div>
     <div class="aptillian">
-        <img src="./img/squirtle.jpeg"
-        style="width:300px;height:200px;"
+        <img src="./img/raichu.webp"
+        style="width:300px;height:320px;"
         class="center"
         >
 
     </div>
 
-    <div class="row">
-        <div class="column">
-            <button type="button" data-toggle="modal" data-target="#pendingChallengesModal">Pending Challenges</button> 
+    <div class="score-row">
+        <div class="score-column">
+            <button class="button" data-toggle="modal" data-target="#pendingChallengesModal">Challenges</button> 
         </div>
-        <div class="column">
-            <button type="button">Send Challenge</button> 
+        <div class="score-column">
+            <button class="button" data-toggle="modal" data-target="#sendChallengesModal">Send Challenge</button> 
         </div>
 
     </div>
