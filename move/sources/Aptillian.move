@@ -13,7 +13,9 @@ module FightClub::Aptillian {
     }
 	struct Fight has store, drop {
 		challenger: AptillianIdentifier,
+		challenger_damage: u64,
 		target: AptillianIdentifier,
+		target_damage: u64,
 	}
 
     struct AptillianStorage has key {
@@ -42,25 +44,25 @@ module FightClub::Aptillian {
 		challenges: vector<AptillianIdentifier>,
 	}
 
-	public (script) fun generate_aptillian_iface(owner: &signer, name: ASCII::String) acquires AptillianStorage {
+	public (script) fun generate_aptillian_entry(owner: &signer, name: ASCII::String) acquires AptillianStorage {
         generate_aptillian(owner, name);
 	}
 
-	public (script) fun challenge_iface(challenger: &signer, challenger_aptillian_id: u64, target: address, target_aptillian_id: u64) acquires AptillianStorage {
+	public (script) fun challenge_entry(challenger: &signer, challenger_aptillian_id: u64, target: address, target_aptillian_id: u64) acquires AptillianStorage {
         challenge(challenger, challenger_aptillian_id, target, target_aptillian_id);
 	}
 
-    public(script) fun accept_iface(owner: &signer, aptillian_id: u64) acquires AptillianStorage {
+    public(script) fun accept_entry(owner: &signer, aptillian_id: u64) acquires AptillianStorage {
         accept(owner, aptillian_id);
     }
 
-    public(script) fun reject_iface(owner: &signer, aptillian_id: u64) acquires AptillianStorage {
+    public(script) fun reject_entry(owner: &signer, aptillian_id: u64) acquires AptillianStorage {
         reject(owner, aptillian_id);
     }
 		
-    // public(script) fun make_turn_iface(owner:&signer, aptillian_id: u64, abilityId: u64, target: address) acquires AptillianStorage {
-    //     make_turn(owner, make_turn);
-    // }
+    public(script) fun take_turn_entry(owner:&signer, aptillian_id: u64, ability_id: u64) acquires AptillianStorage {
+        take_turn(owner, aptillian_id, ability_id);
+    }
 
 	const ENO_APTILLIAN: u64 = 0;
 	const ENO_CHALLENGE: u64 = 1;
@@ -128,7 +130,7 @@ module FightClub::Aptillian {
 	}
     
 	public fun make_fight(challenger: AptillianIdentifier, target: AptillianIdentifier): Fight{
-		Fight {challenger, target}
+		Fight {challenger, 0, target, 0}
 	}
 
 	public fun make_aptillian_storage(): AptillianStorage{
@@ -166,14 +168,105 @@ module FightClub::Aptillian {
 
 		assert!(Vector::length(target.challenge), ENO_CHALLENGE);
 	}
+=
+
+	public fun get_fight(aptillian: Aptillian): Fight{
+		// Returns the fight this aptillian is in
+		if(Vector::length(&aptillian.fight) == 1){
+			Vector::borrow_mut(&mut owner_apt.fight);
+			return
+		} else {
+			let challenger_identifier = Vector::borrow_mut(&mut aptillian.versus);
+			let challenger_addr = challenger_identifier.owner;
+			let challenger_apt_storage = borrow_global_mut<AptillianStorage>(challenger_addr);
+			
+			let challenger_apt = Table::borrow_mut(&mut (challenger_apt_storage.map), &challenger_identifier.aptillian_id);
+			Vector::borrow(&challenger_apt.fight);
+			return
+		}
+	}
+
+
+	public fun get_aptillian(ident: AptillianIdentifier): Aptillian {
+		let apt_storage = borrow_global_mut<AptillianStorage>(ident.owner);
+		let apt = Table::borrow_mut(&mut (owner_apt_storage.map), &ident.aptillian_id);
+		return apt
+	}
+
+	public fun calc_victory(aptillian: Aptillian) {
+		/* WIP -- randomly do things here */
+	}
+	
+	public fun calc_loss(aptillian: Aptillian) {
+		/* WIP -- randomly do things here */
+	}
+
+    public(script) fun take_turn(owner:&signer, aptillian_id: u64, ability_id: u64) acquires AptillianStorage {
+		let owner_addr = Signer::address_of(owner);
+		let owner_apt = get_aptillian(make_aptillian_identifier(owner_addr, aptillian_id));
+		let fight = get_fight(owner_apt);
+		
+		let damage = 213;
+		if(fight.challenger.owner == owner_addr){
+			// We add 1 to the damage to ensure that after a turn is taken,
+			// damage > 0, as we check ""truthiness"" later 
+			fight.challenger_damage = damage+1;
+		}
+		else{
+			// We add 1 to the damage to ensure that after a turn is taken,
+			// damage > 0, as we check ""truthiness"" later 
+			fight.target_damage = damage+1;
+		}
+
+
+		// If the fight is over, then determine winner/loser and change stats accordingly.
+		if (fight.challenger_damage > 0 && fight.target_damage > 0) {
+			if (fight.challenger_damage > fight.target_damage) {
+				// Challenger wins
+				boost_stat(get_aptillian(challenger));
+			} else {
+				// Target wins, or tie (tie == target wins for v1).
+				
+			}
+		}
+
+	struct Fight has store, drop {
+		challenger: AptillianIdentifier,
+		challenger_damage: u64,
+		target: AptillianIdentifier,
+		target_damage: u64,
+	}
+
+		// Now determine if the fight is over.
+		if (fight.)
+    }
 
 	public fun accept(owner: &signer, aptillian_id: u64) {
 		let owner_addr = Signer::address_of(owner);
 		let owner_apt_storage = borrow_global_mut<AptillianStorage>(owner_addr);
-		let owner_apt = Table::borrow_mut(&mut (target_apt_storage.map), &aptillian_id);
+		let owner_apt = Table::borrow_mut(&mut (owner_apt_storage.map), &aptillian_id);
+		
+		// remove the challenge from the list of challenges
 		let challenger_identifier = Vector::pop_back(&owner_apt.challenge);
-		/** TODO -- CREATE A NEW FIGHT HERE AND ASSIGN VALUES ACCORDINGLY */
-		assert!(0 != 0);
+	
+		let challenger_addr = challenger_identifier.owner;
+		let challenger_apt_storage = borrow_global_mut<AptillianStorage>(challenger_addr);
+		let challenger_apt = Table::borrow_mut(&mut (challenger_apt_storage.map), &aptillian_id);
+		
+		let owner_identifier = make_aptillian_identifier(owner_addr, aptillian_id);
+		let fight = make_fight( challenger_identifier, owner_identifier);
+		owner_apt.versus = owner_identifier;
+		
+		// The `fight` lives on the challenger, as this simplifies interactions later on.
+		Vector::push_back(&mut challenger.fights, fight);
+		
+		while (Vector::length(Vector::pop_back(&owner_apt.challenge)) > 0){
+			Vector::pop_back(&owner_apt.challenge);
+		}
+		while (Vector::length(Vector::pop_back(&challenger_apt.challenge)) > 0){
+			Vector::pop_back(&challenger_apt.challenge);
+		}
+		
 	}
 	
 	public fun reject(owner: &signer, aptillian_id: u64) {
