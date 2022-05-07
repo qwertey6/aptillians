@@ -1,0 +1,85 @@
+@font-face {
+    font-family: PokemonGB;
+    src: url("/fonts/PokemonGb-RAeo.ttf");
+}
+
+html, body {
+  height: 100%;
+}
+
+.viewport {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  max-height: 100%;
+  padding: 20px;
+  font-family: PokemonGB;
+}
+
+h1 {
+  text-align: center;
+  margin: 20px auto;
+}
+
+.scene-anchor {
+  max-width: 100%;
+  position: relative;
+}
+
+.scene {
+  width: 100%;
+  height: auto;
+}
+
+.partner-sprite {
+  position: absolute;
+  width: 30%;
+  bottom: 5%;
+  left: 24%;
+}
+
+.opponent-sprite {
+  position: absolute;
+  width: 30%;
+  right: 8%;
+  top: 3%;
+}
+
+.movelist {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.movelist button {
+  padding: 10px;
+  border: 1px solid black;
+  margin: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #f5e2d5;
+  font-family: PokemonGB;
+}
+
+.movelist button:hover {
+  background: #f0c1a1;
+  padding: 9px;
+  border: 2px solid black;
+  box-shadow: 2px 2px 2px gray;
+}
+
+.movelist button:active {
+  background: tan;
+}
+
+.console {
+  border: 5px solid black;
+  padding: 10px;
+  margin-top: 20px;
+  min-height: 300px;
+  flex-grow: 1;
+  overflow-y: scroll;
+  line-height: 2em;
+}
