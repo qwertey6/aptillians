@@ -7,7 +7,7 @@ module FightClub::Aptillian {
 	use Std::Vector::{Self};
 	use Std::Signer;
 
-    struct AptillianIdentifier has store, drop {
+    struct AptillianIdentifier has store, drop, copy {
         owner: address,
 		aptillian_id: u64
     }
@@ -60,8 +60,8 @@ module FightClub::Aptillian {
         reject(owner, aptillian_id);
     }
 		
-    public(script) fun take_turn_entry(owner:&signer, aptillian_id: u64, ability_id: u64) acquires AptillianStorage {
-        take_turn(owner, aptillian_id, ability_id);
+    public(script) fun take_turn_entry(owner:&signer, aptillian_id: u64) acquires AptillianStorage {
+        take_turn(owner, aptillian_id);
     }
 
 	const ENO_APTILLIAN: u64 = 0;
@@ -170,26 +170,6 @@ module FightClub::Aptillian {
 		assert!(Vector::length(target.challenges), ENO_CHALLENGE);
 	}
 
-	public fun get_fight(aptillian: &mut Aptillian): &mut Fight acquires AptillianStorage{
-		// Returns the fight this aptillian is in
-		if(Vector::length<Fight>(&aptillian.fights) == 1){
-			return Vector::borrow_mut(&mut aptillian.fights, 0)
-		} else {
-			let challenger_identifier = Vector::borrow_mut<AptillianIdentifier>(&mut aptillian.versus, 0);
-			let challenger_addr = challenger_identifier.owner;
-			let challenger_apt_storage = borrow_global_mut<AptillianStorage>(challenger_addr);
-			
-			let challenger_apt = Table::borrow_mut(&mut (challenger_apt_storage.map), &challenger_identifier.aptillian_id);
-			
-			return Vector::borrow_mut<Fight>(&mut challenger_apt.fights, 0)
-		}
-	}
-
-	
-	public fun get_aptillian(ident: &AptillianIdentifier): &mut Aptillian acquires AptillianStorage {
-		let apt_storage = borrow_global_mut<AptillianStorage>(ident.owner);
-		Table::borrow_mut<u64, Aptillian>(&mut (apt_storage.map), &ident.aptillian_id)
-	}
 
 	public fun clear_game_state(aptillian: &mut Aptillian) {
 		// Clears all challenges, versus, and fights.
@@ -232,24 +212,60 @@ module FightClub::Aptillian {
 		aptillian.losses = aptillian.losses + 1;
 	}
 
-    public(script) fun take_turn(owner:&signer, aptillian_id: u64, ability_id: u64) acquires AptillianStorage {
+    public(script) fun take_turn(owner:&signer, aptillian_id: u64) acquires AptillianStorage {
 		let owner_addr = Signer::address_of(owner);
-		let owner_apt = get_aptillian(&make_aptillian_identifier(owner_addr, aptillian_id));
-		let fight = get_fight(owner_apt);
+		
+		// assume at first that we are the challenger
+		let challenger_apt_storage = borrow_global_mut<AptillianStorage>(owner_addr);
+		let challenger_apt = Table::borrow_mut<u64, Aptillian>(&mut (challenger_apt_storage.map), &aptillian_id);
+		
+		let target_ident: AptillianIdentifier = if(Vector::length<Fight>(&challenger_apt.fights) == 1){
+			let maybe_target: AptillianIdentifier = Vector::borrow(&challenger_apt.fights, 0).target;
+			let maybe_challenger: AptillianIdentifier = Vector::borrow(&challenger_apt.fights, 0).challenger;
+			if(owner_addr == maybe_target.owner){
+				maybe_target
+			} else {
+				maybe_challenger
+			}
+		} else {
+			Vector::borrow<AptillianIdentifier>(&challenger_apt.versus, 0)
+		};
+
+		let target_apt_storage = borrow_global_mut<AptillianStorage>(target_ident.owner);
+		let target_apt = Table::borrow_mut<u64, Aptillian>(&mut (target_apt_storage.map), &target_ident.aptillian_id);
+		if (Vector::length(&challenger_apt.fights) == 0){
+			let temp_storage = challenger_apt_storage;
+			let temp_apt = challenger_apt_storage;
+			challenger_apt_storage = target_apt_storage;
+			challenger_apt = target_apt;
+			target_apt = temp_storage;
+			target_apt = temp_apt;
+		};
+		let owner_apt = {
+			let apt_storage = borrow_global_mut<AptillianStorage>(owner_addr);
+			Table::borrow_mut<u64, Aptillian>(&mut (apt_storage.map), &aptillian_id)
+		};
+		let fight: &mut Fight = if(Vector::length<Fight>(&owner_apt.fights) == 1){
+			Vector::borrow_mut(&mut owner_apt.fights, 0)
+		} else {
+			let challenger_identifier__ = Vector::borrow_mut<AptillianIdentifier>(&mut owner_apt.versus, 0);
+			let challenger_addr__ = challenger_identifier__.owner;
+			let challenger_apt_storage__ = borrow_global_mut<AptillianStorage>(challenger_addr__);
+			let challenger_apt__ = Table::borrow_mut(&mut (challenger_apt_storage__.map), &challenger_identifier__.aptillian_id);
+			Vector::borrow_mut<Fight>(&mut challenger_apt__.fights, 0)
+		};
 		
 		let damage = (random(owner_apt.games_played) as u64);
 		if(fight.challenger.owner == owner_addr){
 			// We add 1 to the damage to ensure that after a turn is taken,
 			// damage > 0, as we check ""truthiness"" later 
-			fight.challenger_damage = damage+1;
+			fight.challenger_damage = damage + 1;
 		} else {
 			// We add 1 to the damage to ensure that after a turn is taken,
 			// damage > 0, as we check ""truthiness"" later 
-			fight.target_damage = damage+1;
+			fight.target_damage = damage + 1;
 		};
 		
-		let challenger_apt = get_aptillian(&fight.challenger);
-		let target_apt = get_aptillian(&fight.challenger);
 
 		// If the fight is over, then determine winner/loser and change stats accordingly.
 		if (fight.challenger_damage > 0 && fight.target_damage > 0) {
@@ -258,7 +274,7 @@ module FightClub::Aptillian {
 				calc_victory(challenger_apt);
 				if (target_apt.wins - target_apt.losses == 0){
 					// DESTROYED!! Remove the Aptillian from the loser's storage, never to be seen again.
-					Table::remove(&mut borrow_global_mut<AptillianStorage>(fight.target.owner).map, &fight.target.aptillian_id);
+					Table::remove(&mut target_apt_storage.map, &fight.target.aptillian_id);
 				} else {
 					calc_defeat(target_apt);
 				};
@@ -267,7 +283,7 @@ module FightClub::Aptillian {
 				calc_victory(target_apt);
 				if (challenger_apt.wins - challenger_apt.losses == 0){
 					// DESTROYED!! Remove the Aptillian from the loser's storage, never to be seen again.
-					Table::remove<u64, Aptillian>(&mut borrow_global_mut<AptillianStorage>(fight.challenger.owner).map, &fight.challenger.aptillian_id);
+					Table::remove<u64, Aptillian>(&mut challenger_apt_storage.map, &fight.challenger.aptillian_id);
 				} else {
 					calc_defeat(challenger_apt);
 				};
@@ -294,7 +310,7 @@ module FightClub::Aptillian {
 		
 		let owner_identifier = make_aptillian_identifier(owner_addr, aptillian_id);
 		let fight = make_fight( challenger_identifier, owner_identifier);
-		owner_apt.versus = owner_identifier;
+		Vector::push_back<AptillianIdentifier>(&mut owner_apt.versus, owner_identifier);
 		
 		// The `fight` lives on the challenger, as this simplifies interactions later on.
 		Vector::push_back<Fight>(&mut challenger_apt.fights, fight);
