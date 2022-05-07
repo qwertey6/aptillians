@@ -4,11 +4,11 @@ module FightClub::Main {
 	use Std::ASCII;
 	use FightClub::Types;
   
-	public(script) fun generate_aptillian(owner: &signer, name: ASCII::String, type: u64) acquires AptillianStorage {
-        FightClub::Aptillian::generate_aptillian(owner: &signer, name: ASCII::String, type: u64);
+	public (script) fun generate_aptillian(owner: &signer, name: ASCII::String, type: u64) acquires AptillianStorage {
+        FightClub::Aptillian::generate_aptillian(owner, name, type);
 	}
 
-	public(script) fun challenge(challenger: &signer, challenger_aptillian_id: u64, target: address, target_aptillian_id: ASCII::String) acquires Aptillian, AptillianStorage {
+	public (script) fun challenge(challenger: &signer, challenger_aptillian_id: u64, target: address, target_aptillian_id: ASCII::String) acquires Aptillian, AptillianStorage {
         FightClub::Challenge::challenge(challenger, challenger_aptillian_id, target, target_aptillian_id);
 	}
 

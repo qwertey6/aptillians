@@ -7,7 +7,7 @@ module FightClub::Aptillian {
 
     const ENO_TOO_MANY_APTILLIAN: u64 = 0;
 
-	public(script) fun generate_aptillian(owner: &signer, name: ASCII::String, type: u64) {
+	public (script) fun generate_aptillian(owner: &signer, name: ASCII::String, type: u64) {
 		let losses = 0;
 		let wins = 0;
 		let hp = random10();
@@ -22,8 +22,8 @@ module FightClub::Aptillian {
 		let fights = Vector::empty<Fight>();
 		let challenges = Vector::empty<AptillianIdentifier>();
 		if(!exists<AptillianStorage>(Signer::address_of(owner))){
-			move_to<AptillianStorage>(owner, {Table::new<u64, Aptillian>(), 0});
-		}
+			move_to<AptillianStorage>(owner, AptillianStorage {map: Table::new<u64, Aptillian>(), insertions: 0});
+		};
 		let table = borrow_global_mut<AptillianStorage>(owner).map;
 		table.insertions = table.insertions + 1;
 
