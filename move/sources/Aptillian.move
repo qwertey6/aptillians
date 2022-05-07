@@ -2,37 +2,10 @@ module FightClub::Aptillian {
     use Std::Signer;
 	use Std::Vector;
 	use Std::ASCII;
-	//use AptosFramework::Timestamp;
+	use FightClub::Types;
+	use Std::Table;
 
-	struct Aptillian has key, drop {
-		// aptillian_id: u64,
-		name: ASCII::String,
-		type: u64,
-		losses: u64,
-		wins: u64,
-    // STATS vv
-    // These change after winning/losing, and are /used to calculate damage/
-		hp: u64,
-		attack: u64,
-		defense: u64,
-		speed: u64,
-		fights: vector<Fight>,
-		challenges: vector<Challenge>
-	}
-
-	struct Challenge has store, drop {
-		challenger: address,
-		//aptillian_id: u64
-	}
-    
-	struct Fight has store, drop {
-		challenger: address,
-		//challenger_aptillian_id: u64,
-		target: address,
-		//target_aptillian_id: u64,
-	}
-
-	const ENO_APTILLIAN: u64 = 0;
+    const ENO_TOO_MANY_APTILLIAN: u64 = 0;
 
 	public(script) fun generate_aptillian(owner: &signer, name: ASCII::String, type: u64) {
 		let losses = 0;
@@ -45,33 +18,38 @@ module FightClub::Aptillian {
 		attack = (attack * 10) / total;
 		defense = (defense * 10) / total;
 		speed = (speed * 10) / total;
+		let versus = Vector::empty<AptillianIdentifier>();
 		let fights = Vector::empty<Fight>();
-		let challenges = Vector::empty<Challenge>();
-		move_to<Aptillian>(owner, Aptillian {name, type, losses, wins, hp, attack, defense, speed, fights, challenges})
+		let challenges = Vector::empty<AptillianIdentifier>();
+		if(!exists<AptillianStorage>(Signer::address_of(owner))){
+			move_to<AptillianStorage>(owner, {Table::new<u64, Aptillian>(), 0});
+		}
+		let table = borrow_global_mut<AptillianStorage>(owner).map;
+		table.insertions = table.insertions + 1;
+
+		// An owner is not allowed to have more than five aptillians at a time.
+		assert!(Table::length(table) <= 5, ENO_TOO_MANY_APTILLIAN);
+		
+		Table::add(
+			table,
+			table.insertions,
+			Aptillian {
+				name,
+				type,
+				losses,
+				wins,
+				hp,
+				attack,
+				defense,
+				speed,
+				versus,
+				fights,
+				challenges,
+			}
+		)
 	}
 
-	public(script) fun challenge(challenger: &signer, target: address) acquires Aptillian {
-		let challenger_addr = Signer::address_of(challenger);
-		let challenge = Challenge {challenger: challenger_addr};
-		// assert exists first
-		let target_apt = borrow_global_mut<Aptillian>(target);
-		Vector::push_back(&mut target_apt.challenges, challenge);
-
-	}
-
-    #[test(fighter = @0x1, target = @0x2)]
-    public(script) fun pick_a_fight(fighter: signer, target: signer) acquires Aptillian {
-		let fighter_addr = Signer::address_of(&fighter);
-		generate_aptillian(&fighter, ASCII::string(b"the fighter"), 1);
-		assert!(exists<Aptillian>(fighter_addr), ENO_APTILLIAN);
-		let target_addr = Signer::address_of(&target);
-		generate_aptillian(&target, ASCII::string(b"the target"), 1);
-		assert!(exists<Aptillian>(target_addr), ENO_APTILLIAN);
-
-		challenge(&fighter, target_addr);
-
-	}
-
+	// TODO -- move below to Utils.move
 	fun random10(): u64 {
 		5
 	// 	let x = Timestamp::now_microseconds();
