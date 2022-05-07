@@ -2,13 +2,13 @@ import { AccountAddress, AptillianId, ElementEnum } from './types';
 
 export class AptillianIdentifierDto {
   /**
-The address of the account where this challenge is coming from", type:'string
-*/
+    The address of the account where this challenge is coming from", type:'string
+  */
   address: AccountAddress;
 
   /**
-The aptillian Id that the challenger intends to use for the fight", type:'string
-*/
+    The aptillian Id that the challenger intends to use for the fight", type:'string
+  */
   aptillianId: AptillianId;
 }
 

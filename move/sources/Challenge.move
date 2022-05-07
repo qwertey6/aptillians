@@ -9,13 +9,12 @@ module FightClub::Challenge {
 
 	public(script) fun challenge(challenger: &signer, challenger_aptillian_id: u64, target: address, target_aptillian_id:u64) acquires Aptillian {
 		let challenger_addr = Signer::address_of(challenger);
-		let challenge = Challenge {challenger: challenger_addr, challenger_aptillian_id};
+		let challenge = make_aptillian_identifier(owner: challenger_addr, aptillian_id: challenger_aptillian_id);
 		// assert exists first
 		let target_apt_storage = borrow_global_mut<AptillianStorage>(target);
 
 		let target_apt = Table::borrow_mut(target_apt_storage.map, target_aptillian_id);
 		Vector::push_back(&mut target_apt.challenges, challenge);
-
 	}
 
     #[test(fighter = @0x1, target = @0x2)]

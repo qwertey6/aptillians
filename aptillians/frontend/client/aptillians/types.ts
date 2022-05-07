@@ -1,5 +1,5 @@
 
-export type AccountAddress = string;
+export type AccountAddress = Uint8Array;
 
 export type AptillianId = string;
 
